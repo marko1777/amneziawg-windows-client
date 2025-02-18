@@ -8,7 +8,10 @@
 
 package syntax
 
-import "unsafe"
+import (
+	"encoding/base64"
+	"unsafe"
+)
 
 type highlight int
 
@@ -37,6 +40,7 @@ const (
 	highlightH2
 	highlightH3
 	highlightH4
+	highlightLuaCodec
 	highlightError
 )
 
@@ -277,6 +281,14 @@ func (s stringSpan) isValidPersistentKeepAlive() bool {
 	return s.isValidUint(false, 0, 65535)
 }
 
+func (s stringSpan) isValidBase64() bool {
+	if s.s == nil || s.len <= 0 {
+		return false
+	}
+	_, err := base64.StdEncoding.DecodeString(string(unsafe.Slice(s.s, s.len)))
+	return err == nil
+}
+
 // It's probably not worthwhile to try to validate a bash expression. So instead we just demand non-zero length.
 func (s stringSpan) isValidPrePostUpDown() bool {
 	return s.len != 0
@@ -388,6 +400,7 @@ const (
 	fieldH2
 	fieldH3
 	fieldH4
+	fieldLuaCodec
 	fieldPeerSection
 	fieldPublicKey
 	fieldPresharedKey
@@ -457,6 +470,8 @@ func (s stringSpan) field() field {
 		return fieldH3
 	case s.isCaselessSame("H4"):
 		return fieldH4
+	case s.isCaselessSame("LuaCodec"):
+		return fieldLuaCodec
 	}
 	return fieldInvalid
 }
@@ -595,6 +610,8 @@ func (hsa *highlightSpanArray) highlightValue(parent, s stringSpan, section fiel
 		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 2_147_483_647), highlightH3))
 	case fieldH4:
 		hsa.append(parent.s, s, validateHighlight(s.isValidUint(false, 0, 2_147_483_647), highlightH4))
+	case fieldLuaCodec:
+		hsa.append(parent.s, s, validateHighlight(s.isValidBase64(), highlightLuaCodec))
 	default:
 		hsa.append(parent.s, s, highlightError)
 	}
