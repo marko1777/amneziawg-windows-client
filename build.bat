@@ -13,7 +13,7 @@ if exist .deps\prepared goto :render
 	rmdir /s /q .deps 2> NUL
 	mkdir .deps || goto :error
 	cd .deps || goto :error
-	call :download go.zip https://go.dev/dl/go1.22.0.windows-amd64.zip 78b3158fe3aa358e0b6c9f26ecd338f9a11441e88bc434ae2e9f0ca2b0cc4dd3 || goto :error
+    call :download go.zip https://go.dev/dl/go1.23.0.windows-amd64.zip d4be481ef73079ee0ad46081d278923aa3fd78db1b3cf147172592f73e14c1ac || goto :error
 	call :download llvm-mingw-20231128-ucrt-x86_64.zip https://github.com/mstorsjo/llvm-mingw/releases/download/20231128/llvm-mingw-20231128-ucrt-x86_64.zip 7a344dafa6942de2c1f4643b3eb5c5ce5317fbab671a887e4d39f326b331798f || goto :error
 	rem Mirror of https://imagemagick.org/download/binaries/ImageMagick-7.0.8-42-portable-Q16-x64.zip
 	call :download imagemagick.zip https://download.wireguard.com/windows-toolchain/distfiles/ImageMagick-7.0.8-42-portable-Q16-x64.zip 584e069f56456ce7dde40220948ff9568ac810688c892c5dfb7f6db902aa05aa "convert.exe colors.xml delegates.xml" || goto :error
@@ -21,6 +21,7 @@ if exist .deps\prepared goto :render
 	call :download make.zip https://download.wireguard.com/windows-toolchain/distfiles/make-4.2.1-without-guile-w32-bin.zip 30641be9602712be76212b99df7209f4f8f518ba764cf564262bc9d6e4047cc7 "--strip-components 1 bin" || goto :error
 	call :download amneziawg-tools.zip https://github.com/amnezia-vpn/amneziawg-tools/archive/e42813caac0b1846810f20435b699234ef5f7ead.zip 7c1e6097e3e8c278dd90dde33a78a54119f5b1ee143ce9fb553700eb7d1001a3 "--exclude wg-quick --strip-components 1" || goto :error
 	call :download wintun.zip https://www.wintun.net/builds/wintun-0.14.1.zip 07c256185d6ee3652e09fa55c0b673e2624b565e02c4b9091c79ca7d2f24ef51 || goto :error
+	call :download lua-windows.zip https://github.com/marko1777/3rd-prebuilt/raw/refs/heads/master/3rd-prebuilt/amneziawg/windows/lua-windows.zip 0bbd996028722f683cb9cbb073465342eff44ca322a90fa2952dc473f2237ef5 || goto :error
 	copy /y NUL prepared > NUL || goto :error
 	cd .. || goto :error
 
@@ -34,15 +35,16 @@ if exist .deps\prepared goto :render
 	for /f "tokens=1-4" %%a in ("%WIREGUARD_VERSION:.= % 0 0 0") do set WIREGUARD_VERSION_ARRAY=%%a,%%b,%%c,%%d
 	set GOOS=windows
 	set GOARM=7
+	set CGO_ENABLED=1
 	set GOPATH=%BUILDDIR%.deps\gopath
 	set GOROOT=%BUILDDIR%.deps\go
 	if "%GoGenerate%"=="yes" (
 		echo [+] Regenerating files
 		go generate ./... || exit /b 1
 	)
-	call :build_plat x86 i686 386 || goto :error
-	call :build_plat amd64 x86_64 amd64 || goto :error
-	call :build_plat arm64 aarch64 arm64 || goto :error
+	call :build_plat x86 i686 386 x86 || goto :error
+	call :build_plat amd64 x86_64 amd64 x64 || goto :error
+    REM call :build_plat arm64 aarch64 arm64 || goto :error
 
 :sign
 	if exist .\sign.bat call .\sign.bat
@@ -72,14 +74,15 @@ if exist .deps\prepared goto :render
 	echo [+] Assembling resources %1
 	%~2-w64-mingw32-windres -DWIREGUARD_VERSION_ARRAY=%WIREGUARD_VERSION_ARRAY% -DWIREGUARD_VERSION_STR=%WIREGUARD_VERSION% -i resources.rc -o "resources_%~3.syso" -O coff -c 65001 || exit /b %errorlevel%
 	echo [+] Building program %1
-	go build -tags load_wgnt_from_rsrc -ldflags="-H windowsgui -s -w" -trimpath -buildvcs=false -v -o "%~1\amneziawg.exe" || exit /b 1
-	if not exist "%~1\awg.exe" (
-		echo [+] Building command line tools %1
-		del .deps\src\*.exe .deps\src\*.o .deps\src\wincompat\*.o .deps\src\wincompat\*.lib 2> NUL
-		set LDFLAGS=-s
-		make --no-print-directory -C .deps\src PLATFORM=windows CC=%~2-w64-mingw32-gcc WINDRES=%~2-w64-mingw32-windres V=1 RUNSTATEDIR= SYSTEMDUNITDIR= -j%NUMBER_OF_PROCESSORS% || exit /b 1
-                move /Y .deps\src\awg.exe "%~1\awg.exe" > NUL || exit /b 1
-	)
+    set CGO_LDFLAGS=-L%BUILDDIR%.deps\lua-windows\%~4
+	go build -tags "luajit load_wgnt_from_rsrc " -ldflags="-H windowsgui -s -w" -trimpath -buildvcs=false -v -o "%~1\amneziawg.exe" || exit /b 1
+	REM if not exist "%~1\awg.exe" (
+	REM 	echo [+] Building command line tools %1
+	REM 	del .deps\src\*.exe .deps\src\*.o .deps\src\wincompat\*.o .deps\src\wincompat\*.lib 2> NUL
+	REM 	set LDFLAGS=-s
+	REM 	make --no-print-directory -C .deps\src PLATFORM=windows CC=%~2-w64-mingw32-gcc WINDRES=%~2-w64-mingw32-windres V=1 RUNSTATEDIR= SYSTEMDUNITDIR= -j%NUMBER_OF_PROCESSORS% || exit /b 1
+ REM                move /Y .deps\src\awg.exe "%~1\awg.exe" > NUL || exit /b 1
+	REM )
 	if not exist "%~1\wintun.dll" (
 		copy /Y ".deps\wintun\bin\%~1\wintun.dll" "%~1\wintun.dll" > NUL || exit /b 1
 	)
