@@ -13,7 +13,7 @@ if exist .deps\prepared goto :render
 	rmdir /s /q .deps 2> NUL
 	mkdir .deps || goto :error
 	cd .deps || goto :error
-    call :download go.zip https://go.dev/dl/go1.23.0.windows-amd64.zip d4be481ef73079ee0ad46081d278923aa3fd78db1b3cf147172592f73e14c1ac || goto :error
+    call :download go.zip https://go.dev/dl/go1.24.0.windows-amd64.zip 96b7280979205813759ee6947be7e3bb497da85c482711116c00522e3bb41ff1 || goto :error
 	call :download llvm-mingw-20231128-ucrt-x86_64.zip https://github.com/mstorsjo/llvm-mingw/releases/download/20231128/llvm-mingw-20231128-ucrt-x86_64.zip 7a344dafa6942de2c1f4643b3eb5c5ce5317fbab671a887e4d39f326b331798f || goto :error
 	rem Mirror of https://imagemagick.org/download/binaries/ImageMagick-7.0.8-42-portable-Q16-x64.zip
 	call :download imagemagick.zip https://download.wireguard.com/windows-toolchain/distfiles/ImageMagick-7.0.8-42-portable-Q16-x64.zip 584e069f56456ce7dde40220948ff9568ac810688c892c5dfb7f6db902aa05aa "convert.exe colors.xml delegates.xml" || goto :error
@@ -42,7 +42,7 @@ if exist .deps\prepared goto :render
 		echo [+] Regenerating files
 		go generate ./... || exit /b 1
 	)
-	call :build_plat x86 i686 386 x86 || goto :error
+	@REM call :build_plat x86 i686 386 x86 || goto :error
 	call :build_plat amd64 x86_64 amd64 x64 || goto :error
     REM call :build_plat arm64 aarch64 arm64 || goto :error
 

@@ -5,7 +5,7 @@
 Windows 10 64-bit or Windows Server 2019, and Git for Windows is required. The build script will take care of downloading, verifying, and extracting the right versions of the various dependencies:
 
 ```text
-C:\Projects> git clone https://github.com/amnezia-vpn/amneziawg-windows-client
+C:\Projects> git clone https://github.com/amnezia-vpn/euphoria-windows-client
 C:\Projects> cd amneziawg-windows-client
 C:\Projects\amneziawg-windows-client> build
 ```
@@ -72,7 +72,7 @@ You must first have Mingw and ImageMagick installed.
 
 ```text
 $ sudo apt install mingw-w64 imagemagick
-$ git clone https://github.com/amnezia-vpn/amneziawg-windows-client
+$ git clone https://github.com/amnezia-vpn/euphoria-windows-client
 $ cd amneziawg-windows-client
 $ make
 ```

@@ -20,8 +20,8 @@ import (
 	"golang.org/x/sys/windows/svc"
 	"golang.org/x/sys/windows/svc/mgr"
 
-	"github.com/amnezia-vpn/amneziawg-windows/conf"
-	"github.com/amnezia-vpn/amneziawg-windows/services"
+	"github.com/amnezia-vpn/euphoria-windows/conf"
+	"github.com/amnezia-vpn/euphoria-windows/services"
 )
 
 var (

@@ -18,13 +18,13 @@ import (
 
 	"golang.org/x/sys/windows"
 
-	"github.com/amnezia-vpn/amneziawg-windows/tunnel"
+	"github.com/amnezia-vpn/euphoria-windows/tunnel"
 
-	"github.com/amnezia-vpn/amneziawg-windows-client/elevate"
-	"github.com/amnezia-vpn/amneziawg-windows-client/l18n"
-	"github.com/amnezia-vpn/amneziawg-windows-client/manager"
-	"github.com/amnezia-vpn/amneziawg-windows-client/ringlogger"
-	"github.com/amnezia-vpn/amneziawg-windows-client/ui"
+	"github.com/amnezia-vpn/euphoria-windows-client/elevate"
+	"github.com/amnezia-vpn/euphoria-windows-client/l18n"
+	"github.com/amnezia-vpn/euphoria-windows-client/manager"
+	"github.com/amnezia-vpn/euphoria-windows-client/ringlogger"
+	"github.com/amnezia-vpn/euphoria-windows-client/ui"
 )
 
 func setLogFile() {

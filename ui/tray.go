@@ -9,9 +9,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/amnezia-vpn/amneziawg-windows-client/l18n"
-	"github.com/amnezia-vpn/amneziawg-windows-client/manager"
-	"github.com/amnezia-vpn/amneziawg-windows/conf"
+	"github.com/amnezia-vpn/euphoria-windows-client/l18n"
+	"github.com/amnezia-vpn/euphoria-windows-client/manager"
+	"github.com/amnezia-vpn/euphoria-windows/conf"
 
 	"github.com/lxn/walk"
 )

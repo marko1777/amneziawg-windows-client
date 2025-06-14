@@ -19,10 +19,10 @@ import (
 	"golang.org/x/sys/windows"
 	"golang.org/x/sys/windows/svc"
 
-	"github.com/amnezia-vpn/amneziawg-windows-client/elevate"
-	"github.com/amnezia-vpn/amneziawg-windows-client/ringlogger"
-	"github.com/amnezia-vpn/amneziawg-windows-client/services"
-	"github.com/amnezia-vpn/amneziawg-windows/conf"
+	"github.com/amnezia-vpn/euphoria-windows-client/elevate"
+	"github.com/amnezia-vpn/euphoria-windows-client/ringlogger"
+	"github.com/amnezia-vpn/euphoria-windows-client/services"
+	"github.com/amnezia-vpn/euphoria-windows/conf"
 )
 
 type managerService struct{}

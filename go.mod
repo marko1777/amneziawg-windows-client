@@ -1,14 +1,12 @@
-module github.com/amnezia-vpn/amneziawg-windows-client
+module github.com/amnezia-vpn/euphoria-windows-client
 
-go 1.23
+go 1.24
 
-replace github.com/amnezia-vpn/amneziawg-windows => github.com/marko1777/amneziawg-windows v0.1.4
-
-replace github.com/amnezia-vpn/amneziawg-go => github.com/marko1777/amneziawg-go v0.1.2
+replace github.com/amnezia-vpn/euphoria-windows => github.com/marko1777/amneziawg-windows v0.1.5
 
 require (
-	github.com/amnezia-vpn/amneziawg-go v0.2.12
-	github.com/amnezia-vpn/amneziawg-windows v0.1.4-0.20240526104134-db18f2297e5e
+	github.com/amnezia-vpn/euphoria v0.1.0
+	github.com/amnezia-vpn/euphoria-windows v0.1.0
 	github.com/lxn/walk v0.0.0-20210112085537-c389da54e794
 	github.com/lxn/win v0.0.0-20210218163916-a377121e959e
 	golang.org/x/sys v0.30.0
@@ -19,7 +17,7 @@ require (
 require (
 	github.com/aarzilli/golua v0.0.0-20250217091409-248753f411c4 // indirect
 	github.com/tevino/abool/v2 v2.1.0 // indirect
-	golang.org/x/crypto v0.33.0 // indirect
+	golang.org/x/crypto v0.34.0 // indirect
 	golang.org/x/mod v0.17.0 // indirect
 	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
